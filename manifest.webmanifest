@@ -1,0 +1,9 @@
+{
+  "name": "Iron Man 2058 Cockpit",
+  "short_name": "Iron Man 2058",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b0b0d",
+  "theme_color": "#0b0b0d",
+  "description": "Henrich Industries · Iron Man 2058 Investment Cockpit"
+}
