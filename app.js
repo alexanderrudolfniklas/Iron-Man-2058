@@ -208,3 +208,68 @@
    document.querySelectorAll('.eg-range-row button').forEach(x=>x.classList.remove('active')); b.classList.add('active');
  }));
 })();
+
+
+
+/* === V1.1 hosted-app router: real tabs, not scroll links === */
+(() => {
+  function initRouter(){
+    const nav = [...document.querySelectorAll('nav.tabs a[data-view]')];
+    const sections = [...document.querySelectorAll('[data-app-section]')];
+
+    const groups = {
+      dashboard: ['eg-dashboard','overview'],
+      portfolio: ['capital'],
+      top20: ['eg-dashboard','top20'],
+      etf: ['capital'],
+      bitcoin: ['capital'],
+      buys: ['top20'],
+      dividends: ['div'],
+      strategy: ['overview'],
+      market: ['intel'],
+      goals: ['future'],
+      lab: ['lab']
+    };
+
+    function showView(view, updateHash=true){
+      const ids = groups[view] || ['eg-dashboard','overview'];
+      sections.forEach(sec => {
+        sec.hidden = !ids.includes(sec.id);
+      });
+
+      nav.forEach(a => {
+        const active = a.dataset.view === view;
+        a.classList.toggle('app-active', active);
+        a.setAttribute('aria-current', active ? 'page' : 'false');
+      });
+
+      if(updateHash){
+        history.replaceState(null, '', '#view=' + view);
+      }
+      window.scrollTo({top:0, behavior:'instant'});
+    }
+
+    nav.forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        showView(a.dataset.view);
+      }, true);
+    });
+
+    // Direct links and refreshes keep the selected tab.
+    const match = location.hash.match(/#view=([a-z]+)/i);
+    showView(match ? match[1] : 'dashboard', false);
+
+    window.addEventListener('hashchange', () => {
+      const m = location.hash.match(/#view=([a-z]+)/i);
+      if(m) showView(m[1], false);
+    });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initRouter, {once:true});
+  } else {
+    initRouter();
+  }
+})();

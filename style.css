@@ -111,3 +111,13 @@ a, button, summary { -webkit-tap-highlight-color: rgba(213,167,63,.18); }
 @media (display-mode: standalone) {
   body { padding-top: env(safe-area-inset-top); }
 }
+
+/* V1.1 navigation */
+[data-app-section][hidden]{display:none !important;}
+nav.tabs a.app-active{
+  background:linear-gradient(180deg,#b3132c,#7c0c1e) !important;
+  border-color:#ef3850 !important;
+  color:#fff !important;
+  box-shadow:0 0 0 1px rgba(239,56,80,.18) inset;
+}
+nav.tabs a{cursor:pointer; touch-action:manipulation;}
