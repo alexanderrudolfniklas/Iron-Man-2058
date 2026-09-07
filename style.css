@@ -137,3 +137,9 @@ nav.tabs a.app-active, nav.tabs a[href="#top20"].app-active{
   color:#fff !important;
   box-shadow:0 0 0 1px rgba(239,56,80,.18) inset !important;
 }
+
+/* V1.3 dashboard fix */
+[data-app-section][hidden]{display:none!important}
+.tabs a.app-active{background:#3b1215!important;border-color:#b92438!important;color:#f5f2eb!important;box-shadow:inset 0 0 0 1px rgba(185,36,56,.25)}
+.app-dashboard{padding-top:14px}
+.app-dashboard .mission{font-size:clamp(24px,5vw,44px)}

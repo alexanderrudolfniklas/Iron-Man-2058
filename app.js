@@ -213,7 +213,7 @@
 /* === V1.2 hosted-app router: iPad/Safari-safe, exclusive navigation === */
 (() => {
   const GROUPS = {
-    dashboard: ['overview','capital'],
+    dashboard: ['dashboard-home'],
     portfolio: ['capital'],
     top20: ['eg-dashboard','top20'],
     etf: ['capital'],
