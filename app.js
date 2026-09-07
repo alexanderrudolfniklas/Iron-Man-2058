@@ -12,7 +12,7 @@
 
   ready(() => {
     // Smooth in-page navigation for top nav.
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
+    document.querySelectorAll('a[href^="#"]:not([data-view])').forEach(a => {
       a.addEventListener('click', e => {
         const id = a.getAttribute('href');
         if (!id || id === '#') return;
@@ -209,51 +209,64 @@
  }));
 })();
 
-
-/* === V1.2 hosted-app router: iPad/Safari-safe, exclusive navigation === */
+/* === FINAL hosted-app router: one tab = one real view === */
 (() => {
-  const GROUPS = {
-    dashboard: ['dashboard-home'],
-    portfolio: ['capital'],
-    top20: ['eg-dashboard','top20'],
-    etf: ['capital'],
-    bitcoin: ['capital'],
-    buys: ['top20'],
-    dividends: ['div'],
-    strategy: ['overview'],
-    market: ['intel'],
-    goals: ['future'],
-    lab: ['lab']
-  };
-  function initRouter(){
-    const nav=[...document.querySelectorAll('nav.tabs a[data-view]')];
-    const sections=[...document.querySelectorAll('[data-app-section]')];
-    if(!nav.length || !sections.length) return;
-    function showView(view, updateHash=true){
-      if(!GROUPS[view]) view='dashboard';
-      const ids=GROUPS[view];
-      document.body.dataset.currentView=view;
-      sections.forEach(sec => { sec.hidden=!ids.includes(sec.id); });
-      nav.forEach(a => {
-        const active=a.dataset.view===view;
-        a.classList.remove('active','app-active');
-        if(active) a.classList.add('app-active');
-        a.setAttribute('aria-current',active?'page':'false');
+  function initFinalRouter(){
+    const main = document.querySelector('main.w');
+    const nav = [...document.querySelectorAll('nav.tabs a[data-view]')];
+    if(!main || !nav.length) return;
+
+    // Build four genuinely independent views that did not exist in the legacy page.
+    const mk = (view, title, html) => {
+      const sec=document.createElement('section');
+      sec.className='sec app-generated-view';
+      sec.dataset.appView=view;
+      sec.innerHTML='<h2>'+title+'</h2>'+html;
+      return sec;
+    };
+    const firstExisting=document.getElementById('eg-dashboard');
+    const dashboard=mk('dashboard','Mission Control', `
+      <div class="grid">
+        <article class="card"><div class="label">Investiertes Kapital</div><div class="big">9.045,37 €</div><div class="pos">+9,01 % Gesamtperformance</div></article>
+        <article class="card"><div class="label">Portfolio aktuell</div><div class="big">9.859,95 €</div><div class="muted">Aktien + ETF + Bitcoin</div></article>
+        <article class="card"><div class="label">Monatlicher Autopilot</div><div class="big gold">2.200 €</div><div class="muted">ETF 1.000 € · Top 20 1.000 € · Bitcoin 200 €</div></article>
+        <article class="card"><div class="label">2058 · 7-%-Modell</div><div class="big">≈ 3,09 Mio. €</div><div class="muted">Langfristiges Basisszenario</div></article>
+        <article class="card half"><div class="label">Portfolio-Aufteilung heute</div><div class="row"><span>Aktien</span><b>4.352,54 €</b></div><div class="row"><span>ETF</span><b>4.528,35 €</b></div><div class="row"><span>Bitcoin</span><b>979,06 €</b></div></article>
+        <article class="card half"><div class="label">Nächste Aktion</div><div class="big">10.10.2026</div><div class="call">Nächster Aktienkauf: <b>1.000 €</b><br><span class="muted">Aus den Top 20 nach Bewertung, Qualität und Depotgewicht.</span></div></article>
+      </div>`);
+    const etf=mk('etf','ETF · Core', `<div class="grid"><article class="card half"><div class="label">ETF · aktueller Wert</div><div class="big">4.528,35 €</div><div class="row"><span>Einstand</span><b>3.379,98 €</b></div><div class="row"><span>Ergebnis</span><b class="pos">+1.148,37 € / +33,98 %</b></div></article><article class="card half"><div class="label">Autopilot</div><div class="big gold">1.000 € / Monat</div><div class="row"><span>Anteile</span><b>35,3982</b></div><div class="call">Globaler Core-Baustein des Iron-Man-2058-Portfolios.</div></article></div>`);
+    const bitcoin=mk('bitcoin','Bitcoin', `<div class="grid"><article class="card half"><div class="label">Bitcoin · aktueller Wert</div><div class="big">979,06 €</div><div class="row"><span>Bestand</span><b>0,0142484 BTC</b></div><div class="row"><span>Einstand</span><b>1.199,99 €</b></div><div class="row"><span>Ergebnis</span><b class="neg">−220,93 € / −18,41 %</b></div></article><article class="card half"><div class="label">Autopilot</div><div class="big gold">200 € / Monat</div><div class="row"><span>Ø Einstand</span><b>84.219,98 € / BTC</b></div><div class="call">Langfristige Beimischung · 9,1 % des monatlichen Autopiloten.</div></article></div>`);
+    const buys=mk('buys','Käufe', `<div class="grid"><article class="card full"><div class="label">Bisher erfasste Aktienkäufe</div><div class="row"><span>ADP · 4 Stück à 247,95 €</span><b>991,80 €</b></div><div class="row"><span>Coca-Cola · 14 Stück à 77,07 €</span><b>1.078,98 €</b></div><div class="row"><span>BNP Paribas · 10 Stück à 103,62 €</span><b>1.036,20 €</b></div><div class="row"><span>Microsoft · 3 Stück à 429,40 €</span><b>1.288,20 €</b></div><div class="call">Nächster Aktienkauf: <b>1.000 € · 10.10.2026</b></div></article></div>`);
+    [dashboard,etf,bitcoin,buys].reverse().forEach(v=>main.insertBefore(v,firstExisting));
+
+    const routes={
+      dashboard:[dashboard], portfolio:[document.getElementById('capital')],
+      top20:[document.getElementById('eg-dashboard')], etf:[etf], bitcoin:[bitcoin], buys:[buys],
+      dividends:[document.getElementById('div')], strategy:[document.getElementById('overview')],
+      market:[document.getElementById('intel')], goals:[document.getElementById('future')], lab:[document.getElementById('lab')]
+    };
+    const all=[...document.querySelectorAll('[data-app-section]'),...document.querySelectorAll('.app-generated-view')];
+    // Decorative separators belong to the legacy long page and are hidden in app mode.
+    main.querySelectorAll(':scope > hr').forEach(hr=>hr.style.display='none');
+
+    function show(view,writeHash=true){
+      if(!routes[view]) view='dashboard';
+      const visible=new Set(routes[view].filter(Boolean));
+      all.forEach(el=>{ el.style.setProperty('display',visible.has(el)?'':'none','important'); });
+      nav.forEach(a=>{
+        const on=a.dataset.view===view;
+        a.classList.toggle('app-active',on);
+        a.setAttribute('aria-current',on?'page':'false');
       });
-      if(updateHash){ try{history.replaceState(null,'','#view='+view);}catch(_){} }
-      try{window.scrollTo(0,0);}catch(_){}
+      document.body.dataset.currentView=view;
+      if(writeHash) history.replaceState(null,'','#'+view);
+      window.scrollTo(0,0);
     }
-    nav.forEach(a => a.addEventListener('click', e => {
-      e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
-      showView(a.dataset.view,true);
-    }, true));
-    const m=location.hash.match(/^#view=([a-z0-9-]+)$/i);
-    showView(m&&GROUPS[m[1]]?m[1]:'dashboard',false);
-    window.addEventListener('hashchange',()=>{
-      const x=location.hash.match(/^#view=([a-z0-9-]+)$/i);
-      if(x&&GROUPS[x[1]]) showView(x[1],false);
-    });
+    nav.forEach(a=>a.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();show(a.dataset.view);},true));
+    const initial=location.hash.replace(/^#(?:view=)?/,'');
+    show(routes[initial]?initial:'dashboard',false);
+    window.addEventListener('hashchange',()=>{const v=location.hash.replace(/^#(?:view=)?/,'');if(routes[v])show(v,false);});
   }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initRouter,{once:true});
-  else initRouter();
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initFinalRouter,{once:true});
+  else initFinalRouter();
 })();
