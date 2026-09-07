@@ -1,3 +1,3 @@
-# IRON MAN 2058 — Navigation Final
+IRON MAN 2058 — Dashboard First
 
-Finaler iPad/Safari Router-Fix. Jeder Hauptmenüpunkt ist eine eigenständige Ansicht; nur ein Tab kann aktiv sein. Dashboard, ETF, Bitcoin und Käufe sind eigene Views. Top 20 behält das bestehende Microsoft-Cockpit. Cache-Busting v20 ist eingebaut.
+Änderung: Beim Öffnen oder Neuladen startet die Web-App immer im Dashboard / Mission Control. Top 20 und alle anderen Ansichten bleiben über die Navigation erreichbar.

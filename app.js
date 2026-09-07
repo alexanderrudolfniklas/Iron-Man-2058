@@ -263,9 +263,13 @@
       window.scrollTo(0,0);
     }
     nav.forEach(a=>a.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();show(a.dataset.view);},true));
-    const initial=location.hash.replace(/^#(?:view=)?/,'');
-    show(routes[initial]?initial:'dashboard',false);
-    window.addEventListener('hashchange',()=>{const v=location.hash.replace(/^#(?:view=)?/,'');if(routes[v])show(v,false);});
+    // Always open Mission Control first on a fresh/reloaded app launch.
+    // Navigation still updates the hash while the user moves through the cockpit.
+    show('dashboard',true);
+    window.addEventListener('hashchange',()=>{
+      const v=location.hash.replace(/^#(?:view=)?/,'');
+      if(routes[v]) show(v,false);
+    });
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initFinalRouter,{once:true});
   else initFinalRouter();
