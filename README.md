@@ -1,3 +1,8 @@
-IRON MAN 2058 — Dashboard First
+# IRON MAN 2058 — Dashboard Merge
 
-Änderung: Beim Öffnen oder Neuladen startet die Web-App immer im Dashboard / Mission Control. Top 20 und alle anderen Ansichten bleiben über die Navigation erreichbar.
+Navigation vereinfacht:
+- Dashboard startet zuerst und enthält Mission Control + Portfolio + Strategie.
+- Top 20 bleibt eigene Cockpit-Ansicht.
+- ETF und Bitcoin sind in einem gemeinsamen Reiter zusammengeführt.
+- Separate Reiter Portfolio, Strategie und Bitcoin wurden entfernt.
+- Käufe, Dividenden, Markt, Ziele und Lab bleiben separat.

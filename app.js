@@ -234,15 +234,15 @@
         <article class="card half"><div class="label">Portfolio-Aufteilung heute</div><div class="row"><span>Aktien</span><b>4.352,54 €</b></div><div class="row"><span>ETF</span><b>4.528,35 €</b></div><div class="row"><span>Bitcoin</span><b>979,06 €</b></div></article>
         <article class="card half"><div class="label">Nächste Aktion</div><div class="big">10.10.2026</div><div class="call">Nächster Aktienkauf: <b>1.000 €</b><br><span class="muted">Aus den Top 20 nach Bewertung, Qualität und Depotgewicht.</span></div></article>
       </div>`);
-    const etf=mk('etf','ETF · Core', `<div class="grid"><article class="card half"><div class="label">ETF · aktueller Wert</div><div class="big">4.528,35 €</div><div class="row"><span>Einstand</span><b>3.379,98 €</b></div><div class="row"><span>Ergebnis</span><b class="pos">+1.148,37 € / +33,98 %</b></div></article><article class="card half"><div class="label">Autopilot</div><div class="big gold">1.000 € / Monat</div><div class="row"><span>Anteile</span><b>35,3982</b></div><div class="call">Globaler Core-Baustein des Iron-Man-2058-Portfolios.</div></article></div>`);
+    const etf=mk('assets','ETF + Bitcoin · Core & Satellite', `<div class="grid"><article class="card half"><div class="label">ETF · aktueller Wert</div><div class="big">4.528,35 €</div><div class="row"><span>Einstand</span><b>3.379,98 €</b></div><div class="row"><span>Ergebnis</span><b class="pos">+1.148,37 € / +33,98 %</b></div></article><article class="card half"><div class="label">Autopilot</div><div class="big gold">1.000 € / Monat</div><div class="row"><span>Anteile</span><b>35,3982</b></div><div class="call">Globaler Core-Baustein des Iron-Man-2058-Portfolios.</div></article></div>`);
     const bitcoin=mk('bitcoin','Bitcoin', `<div class="grid"><article class="card half"><div class="label">Bitcoin · aktueller Wert</div><div class="big">979,06 €</div><div class="row"><span>Bestand</span><b>0,0142484 BTC</b></div><div class="row"><span>Einstand</span><b>1.199,99 €</b></div><div class="row"><span>Ergebnis</span><b class="neg">−220,93 € / −18,41 %</b></div></article><article class="card half"><div class="label">Autopilot</div><div class="big gold">200 € / Monat</div><div class="row"><span>Ø Einstand</span><b>84.219,98 € / BTC</b></div><div class="call">Langfristige Beimischung · 9,1 % des monatlichen Autopiloten.</div></article></div>`);
     const buys=mk('buys','Käufe', `<div class="grid"><article class="card full"><div class="label">Bisher erfasste Aktienkäufe</div><div class="row"><span>ADP · 4 Stück à 247,95 €</span><b>991,80 €</b></div><div class="row"><span>Coca-Cola · 14 Stück à 77,07 €</span><b>1.078,98 €</b></div><div class="row"><span>BNP Paribas · 10 Stück à 103,62 €</span><b>1.036,20 €</b></div><div class="row"><span>Microsoft · 3 Stück à 429,40 €</span><b>1.288,20 €</b></div><div class="call">Nächster Aktienkauf: <b>1.000 € · 10.10.2026</b></div></article></div>`);
     [dashboard,etf,bitcoin,buys].reverse().forEach(v=>main.insertBefore(v,firstExisting));
 
     const routes={
-      dashboard:[dashboard], portfolio:[document.getElementById('capital')],
-      top20:[document.getElementById('eg-dashboard')], etf:[etf], bitcoin:[bitcoin], buys:[buys],
-      dividends:[document.getElementById('div')], strategy:[document.getElementById('overview')],
+      dashboard:[dashboard,document.getElementById('capital'),document.getElementById('overview')],
+      top20:[document.getElementById('eg-dashboard')], assets:[etf,bitcoin], buys:[buys],
+      dividends:[document.getElementById('div')],
       market:[document.getElementById('intel')], goals:[document.getElementById('future')], lab:[document.getElementById('lab')]
     };
     const all=[...document.querySelectorAll('[data-app-section]'),...document.querySelectorAll('.app-generated-view')];
