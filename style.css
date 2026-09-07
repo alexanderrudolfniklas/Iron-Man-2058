@@ -121,3 +121,19 @@ nav.tabs a.app-active{
   box-shadow:0 0 0 1px rgba(239,56,80,.18) inset;
 }
 nav.tabs a{cursor:pointer; touch-action:manipulation;}
+
+
+/* V1.2 router visual fix: only the selected top tab is red. */
+[data-app-section][hidden]{display:none !important;}
+nav.tabs a, nav.tabs a[href="#top20"]{
+  background:linear-gradient(180deg,#11161c,#090d12) !important;
+  border-color:#332a2e !important;
+  color:var(--t) !important;
+  box-shadow:none !important;
+}
+nav.tabs a.app-active, nav.tabs a[href="#top20"].app-active{
+  background:linear-gradient(180deg,#b3132c,#7c0c1e) !important;
+  border-color:#ef3850 !important;
+  color:#fff !important;
+  box-shadow:0 0 0 1px rgba(239,56,80,.18) inset !important;
+}

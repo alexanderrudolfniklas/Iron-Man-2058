@@ -210,66 +210,50 @@
 })();
 
 
-
-/* === V1.1 hosted-app router: real tabs, not scroll links === */
+/* === V1.2 hosted-app router: iPad/Safari-safe, exclusive navigation === */
 (() => {
+  const GROUPS = {
+    dashboard: ['overview','capital'],
+    portfolio: ['capital'],
+    top20: ['eg-dashboard','top20'],
+    etf: ['capital'],
+    bitcoin: ['capital'],
+    buys: ['top20'],
+    dividends: ['div'],
+    strategy: ['overview'],
+    market: ['intel'],
+    goals: ['future'],
+    lab: ['lab']
+  };
   function initRouter(){
-    const nav = [...document.querySelectorAll('nav.tabs a[data-view]')];
-    const sections = [...document.querySelectorAll('[data-app-section]')];
-
-    const groups = {
-      dashboard: ['eg-dashboard','overview'],
-      portfolio: ['capital'],
-      top20: ['eg-dashboard','top20'],
-      etf: ['capital'],
-      bitcoin: ['capital'],
-      buys: ['top20'],
-      dividends: ['div'],
-      strategy: ['overview'],
-      market: ['intel'],
-      goals: ['future'],
-      lab: ['lab']
-    };
-
+    const nav=[...document.querySelectorAll('nav.tabs a[data-view]')];
+    const sections=[...document.querySelectorAll('[data-app-section]')];
+    if(!nav.length || !sections.length) return;
     function showView(view, updateHash=true){
-      const ids = groups[view] || ['eg-dashboard','overview'];
-      sections.forEach(sec => {
-        sec.hidden = !ids.includes(sec.id);
-      });
-
+      if(!GROUPS[view]) view='dashboard';
+      const ids=GROUPS[view];
+      document.body.dataset.currentView=view;
+      sections.forEach(sec => { sec.hidden=!ids.includes(sec.id); });
       nav.forEach(a => {
-        const active = a.dataset.view === view;
-        a.classList.toggle('app-active', active);
-        a.setAttribute('aria-current', active ? 'page' : 'false');
+        const active=a.dataset.view===view;
+        a.classList.remove('active','app-active');
+        if(active) a.classList.add('app-active');
+        a.setAttribute('aria-current',active?'page':'false');
       });
-
-      if(updateHash){
-        history.replaceState(null, '', '#view=' + view);
-      }
-      window.scrollTo({top:0, behavior:'instant'});
+      if(updateHash){ try{history.replaceState(null,'','#view='+view);}catch(_){} }
+      try{window.scrollTo(0,0);}catch(_){}
     }
-
-    nav.forEach(a => {
-      a.addEventListener('click', e => {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        showView(a.dataset.view);
-      }, true);
-    });
-
-    // Direct links and refreshes keep the selected tab.
-    const match = location.hash.match(/#view=([a-z]+)/i);
-    showView(match ? match[1] : 'dashboard', false);
-
-    window.addEventListener('hashchange', () => {
-      const m = location.hash.match(/#view=([a-z]+)/i);
-      if(m) showView(m[1], false);
+    nav.forEach(a => a.addEventListener('click', e => {
+      e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+      showView(a.dataset.view,true);
+    }, true));
+    const m=location.hash.match(/^#view=([a-z0-9-]+)$/i);
+    showView(m&&GROUPS[m[1]]?m[1]:'dashboard',false);
+    window.addEventListener('hashchange',()=>{
+      const x=location.hash.match(/^#view=([a-z0-9-]+)$/i);
+      if(x&&GROUPS[x[1]]) showView(x[1],false);
     });
   }
-
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', initRouter, {once:true});
-  } else {
-    initRouter();
-  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initRouter,{once:true});
+  else initRouter();
 })();
